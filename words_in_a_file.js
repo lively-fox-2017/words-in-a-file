@@ -3,10 +3,42 @@ const fs = require('fs')
 // actual conversion code starts here
 function words_in_a_file(filename, limit) {
   fs.readFile(filename, (err, data) => {
+    let stopWords = [
+      'a',
+      'all',
+      'am',
+      'an',
+      'and',
+      'any',
+      'are',
+      "aren't",
+      'as',
+      'at',
+      'be',
+      'been',
+      'being',
+      'both',
+      'but',
+      'by',
+      "can't",
+      'cannot',
+      'from',
+      'in',
+      'is',
+      'of',
+      'on',
+      'or',
+      'pp',
+      'that',
+      'the',
+      'to',
+      'with',
+    ];
 
+    let regexStop = new RegExp("\\b(" + stopWords.join("|") + "|'|'s)\\b", 'ig');
     if (err)
       return console.log(err);
-    let words = data.toString().replace(/\r\n/g, " ").replace(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/g, " ").split(" ");
+    let words = data.toString().replace(/\r\n/g, " ").replace(regexStop, "").replace(/<ref>|<\/ref>/ig, "").replace(/[^a-zA-Z']/g, " ").split(" ");
     var counted = words.reduce(function(countedArr, word) {
       if (word !== '') {
         if (word in countedArr) {
